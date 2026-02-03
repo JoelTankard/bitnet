@@ -1,0 +1,35 @@
+# Environment files (may contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Model files (too large for git)
+models/
+*.gguf
+*.bin
+*.safetensors
+
+# Docker volumes data
+data/
+
+# Node modules (if any local development)
+node_modules/
+
+# Log files
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
+*.tmp

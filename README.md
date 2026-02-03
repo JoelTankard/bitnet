@@ -22,7 +22,8 @@ A demo of bitnet.cpp running a BitNet b1.58 3B model on Apple M2:
 https://github.com/user-attachments/assets/7f46b736-edec-4828-b809-4be780a3e5b1
 
 ## What's New:
-- 01/15/2026 [BitNet CPU Inference Optimization](https://github.com/microsoft/BitNet/blob/main/src/README.md) ![NEW](https://img.shields.io/badge/NEW-red)
+- 02/03/2026 [OpenClaw + BitNet Integration](openclaw-bitnet/) - Run OpenClaw AI assistant with BitNet as the LLM backend in Docker ![NEW](https://img.shields.io/badge/NEW-red)
+- 01/15/2026 [BitNet CPU Inference Optimization](https://github.com/microsoft/BitNet/blob/main/src/README.md)
 - 05/20/2025 [BitNet Official GPU inference kernel](https://github.com/microsoft/BitNet/blob/main/gpu/README.md)
 - 04/14/2025 [BitNet Official 2B Parameter Model on Hugging Face](https://huggingface.co/microsoft/BitNet-b1.58-2B-4T)
 - 02/18/2025 [Bitnet.cpp: Efficient Edge Inference for Ternary LLMs](https://arxiv.org/abs/2502.11880)
@@ -32,6 +33,19 @@ https://github.com/user-attachments/assets/7f46b736-edec-4828-b809-4be780a3e5b1
 - 03/21/2024 [The-Era-of-1-bit-LLMs__Training_Tips_Code_FAQ](https://github.com/microsoft/unilm/blob/master/bitnet/The-Era-of-1-bit-LLMs__Training_Tips_Code_FAQ.pdf)
 - 02/27/2024 [The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits](https://arxiv.org/abs/2402.17764)
 - 10/17/2023 [BitNet: Scaling 1-bit Transformers for Large Language Models](https://arxiv.org/abs/2310.11453)
+
+## OpenClaw Integration
+
+Use BitNet as the LLM backend for [OpenClaw](https://github.com/openclaw/openclaw), the open-source personal AI assistant. This integration runs both services in isolated Docker containers for security.
+
+```bash
+cd openclaw-bitnet
+make setup
+make download-model
+make up
+```
+
+Access OpenClaw at http://localhost:18789. See [openclaw-bitnet/README.md](openclaw-bitnet/README.md) for full documentation.
 
 ## Acknowledgements
 
