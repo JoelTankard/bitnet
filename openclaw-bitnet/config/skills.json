@@ -1,0 +1,93 @@
+{
+  "$schema": "https://openclaw.ai/schemas/skills.json",
+  "version": "1.0",
+  "description": "Skills configuration for BitNet-powered OpenClaw",
+
+  "skills": {
+    "web_search": {
+      "enabled": true,
+      "description": "Search the web for information",
+      "provider": "duckduckgo",
+      "maxResults": 5
+    },
+
+    "browser": {
+      "enabled": true,
+      "description": "Browse websites and take screenshots",
+      "sandbox": true,
+      "timeout": 30000
+    },
+
+    "shell": {
+      "enabled": true,
+      "description": "Execute shell commands",
+      "sandbox": true,
+      "allowedCommands": [
+        "ls", "cat", "head", "tail", "grep", "find",
+        "curl", "wget", "jq", "date", "cal",
+        "python3", "node", "npm"
+      ],
+      "blockedPatterns": [
+        "rm -rf", "sudo", "chmod 777", "> /dev",
+        "mkfs", "dd if=", ":(){:|:&};:"
+      ]
+    },
+
+    "filesystem": {
+      "enabled": true,
+      "description": "Read and write files",
+      "sandbox": true,
+      "allowedPaths": [
+        "/home/openclaw/workspace",
+        "/tmp/openclaw"
+      ],
+      "maxFileSize": "10MB"
+    },
+
+    "calendar": {
+      "enabled": false,
+      "description": "Manage calendar events",
+      "provider": "google",
+      "note": "Requires OAuth setup"
+    },
+
+    "email": {
+      "enabled": false,
+      "description": "Send and read emails",
+      "provider": "gmail",
+      "note": "Requires OAuth setup"
+    },
+
+    "cron": {
+      "enabled": true,
+      "description": "Schedule recurring tasks",
+      "maxJobs": 10
+    },
+
+    "webhooks": {
+      "enabled": true,
+      "description": "Create HTTP webhook endpoints",
+      "maxWebhooks": 5,
+      "rateLimitPerMinute": 60
+    },
+
+    "memory": {
+      "enabled": true,
+      "description": "Remember information across sessions",
+      "maxEntries": 1000,
+      "persistence": "sqlite"
+    }
+  },
+
+  "toolCallFormat": {
+    "style": "xml",
+    "example": "<tool_call>\n{\"name\": \"web_search\", \"parameters\": {\"query\": \"weather today\"}}\n</tool_call>",
+    "note": "BitNet models work better with explicit XML-style tool formatting"
+  },
+
+  "limits": {
+    "maxToolCallsPerTurn": 3,
+    "maxToolCallsPerSession": 50,
+    "toolTimeout": 30000
+  }
+}

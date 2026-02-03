@@ -1,0 +1,88 @@
+# BitNet Inference Server Dockerfile
+# Builds bitnet.cpp and runs the llama-server for OpenAI-compatible API
+
+FROM ubuntu:22.04 AS builder
+
+# Avoid prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    python3 \
+    python3-pip \
+    lsb-release \
+    software-properties-common \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install clang 18
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 18 && \
+    rm llvm.sh
+
+# Set clang as default compiler
+ENV CC=clang-18
+ENV CXX=clang++-18
+
+# Create working directory
+WORKDIR /bitnet
+
+# Copy BitNet source code
+COPY . /bitnet/
+
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Create models directory
+RUN mkdir -p /bitnet/models
+
+# Build bitnet.cpp with a default model setup
+# The actual model will be mounted at runtime
+RUN python3 setup_env.py -hr 1bitLLM/bitnet_b1_58-large -q i2_s || true
+
+# Runtime image
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy built artifacts from builder
+COPY --from=builder /bitnet/build /bitnet/build
+COPY --from=builder /bitnet/run_inference_server.py /bitnet/
+COPY --from=builder /bitnet/run_inference.py /bitnet/
+
+WORKDIR /bitnet
+
+# Create models mount point
+RUN mkdir -p /models
+
+# Environment variables
+ENV BITNET_MODEL=/models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf
+ENV BITNET_THREADS=4
+ENV BITNET_CTX_SIZE=4096
+ENV BITNET_PORT=8080
+ENV BITNET_HOST=0.0.0.0
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:${BITNET_PORT}/health || exit 1
+
+# Expose the server port
+EXPOSE 8080
+
+# Start script
+COPY openclaw-bitnet/docker/entrypoint-bitnet.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
