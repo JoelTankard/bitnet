@@ -1,8 +1,10 @@
 # OpenClaw + BitNet Makefile
 # Convenience commands for managing the Docker setup
 
-.PHONY: setup build up down logs clean test download-model help
-.PHONY: use-2b use-large use-3b use-8b model
+.PHONY: setup build up down logs clean test help
+.PHONY: download-model download-model-large download-model-3b download-model-llama3
+.PHONY: use-2b use-large use-3b use-8b model restart
+.PHONY: shell-bitnet shell-openclaw status rebuild
 
 # Default target
 help:
