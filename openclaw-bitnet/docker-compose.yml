@@ -1,5 +1,8 @@
 version: '3.8'
 
+# Model switching: Run ./scripts/switch-model.sh [2b|large|3b|8b]
+# This creates a .env file that overrides the defaults below
+
 services:
   # BitNet Inference Server
   # Runs the 1-bit LLM with OpenAI-compatible API
@@ -13,9 +16,9 @@ services:
       - bitnet-models:/models
       - ./models:/models/custom:ro
     environment:
-      - BITNET_MODEL=/models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf
-      - BITNET_THREADS=4
-      - BITNET_CTX_SIZE=4096
+      - BITNET_MODEL=${BITNET_MODEL:-/models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf}
+      - BITNET_THREADS=${BITNET_THREADS:-4}
+      - BITNET_CTX_SIZE=${BITNET_CTX_SIZE:-4096}
       - BITNET_PORT=8080
       - BITNET_HOST=0.0.0.0
     networks:
@@ -26,9 +29,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 8G
+          memory: ${BITNET_MEMORY_LIMIT:-8G}
         reservations:
-          memory: 4G
+          memory: 2G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
