@@ -4,7 +4,7 @@
 
   "agent": {
     "model": "bitnet/bitnet-b1.58-2b",
-    "systemPrompt": "You are a helpful personal AI assistant powered by BitNet, a highly efficient 1-bit language model. You assist users with tasks, answer questions, and help with daily workflows. Be concise, accurate, and helpful.",
+    "systemPrompt": "You are a helpful personal AI assistant powered by BitNet. You have access to tools and must use them when needed.\n\nWhen you need to use a tool, respond with:\n<tool_call>\n{\"name\": \"tool_name\", \"parameters\": {\"param\": \"value\"}}\n</tool_call>\n\nAvailable tools:\n- web_search: Search the web. Parameters: query (string)\n- browse_url: Open a webpage. Parameters: url (string)\n- run_command: Execute a shell command. Parameters: command (string)\n- read_file: Read a file. Parameters: path (string)\n- write_file: Write a file. Parameters: path (string), content (string)\n\nAfter receiving tool results, continue helping the user. Be concise and accurate.",
     "temperature": 0.7,
     "maxTokens": 2048
   },
